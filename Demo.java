@@ -1,4 +1,4 @@
-public class Order {
+class Order {
 	public static final double BURGER_PRICE = 500.00;
 	
 	public static final int PREPARING = 0;
@@ -31,8 +31,8 @@ public class Order {
 	public String getOrderStatusText() {
 		switch (orderStatus) {
 			case PREPARING: return "PREPARING";	
-			case DELIVERED: return "PREPARING";	
-			case CANCELLED: return "PREPARING";
+			case DELIVERED: return "DELIVERED";	
+			case CANCELLED: return "CANCELLED";
 			default: return "UNKNOWN";		
 		}	
 	}
@@ -52,7 +52,7 @@ public class Order {
 }
 
 //02--------------------------------------------
-public class OrderList {
+class OrderList {
 	private Order[] orderArray;
 	private int size;
 	private int capacity;
@@ -77,7 +77,7 @@ public class OrderList {
 	}
 	
 	public void add(Order order) {
-		if (size == capacity {
+		if (size == capacity) {
 			extendArray();	
 		}
 		orderArray[size++] = order;
@@ -104,26 +104,102 @@ public class OrderList {
 }
 
 //03-------------------
-public class OrderController {
+class OrderController {
 	private static OrderList orderList = new OrderList();
 	
 	public static String generateOrderId() {
-		return String.format("0%03d", orderList.size() + 1);	
+		return String.format("O%03d", orderList.size() + 1);	
 	}	
-	
+
+	public static boolean placeOrder(String orderId, String customerId, String name, int qty){
+		if (qty <= 0){
+			return false;	
+		}
+		Order newOrder = new Order(orderId, customerId, name, qty, Order.PREPARING);
+		orderList.add(newOrder);
+		return true;
+	}
+
 	public static String generateCustomerId() {
 		int maxId = 0;
 		for (int i = 0; i < orderList.size(); i++) {
-			String cid = orederList.get(i).getCustomerId();
-			if(cid.startsWith("C") && cid.length() > 1) {
+			String cid = orderList.get(i).getCustomerId();
+			if(cid.startsWith("C") && cid.length() > 1){
 				try {
 					int num = Integer.parseInt(cid.substring(1));
-					if (num > maxId) {
-						maxId = num;	
+					if(num > maxId) {
+					maxId = num;		
 					}	
 				}catch (NumberFormatException ignored) {}	
+			}		
+		}	
+		return String.format("C%03d", maxId + 1);
+	}
+	
+	//Search Order by Order ID
+	public static Order searchOrder(String orderId) {
+		for (int i=0; i < orderList.size(); i++) {
+			if(orderList.get(i).getOrderId.equalsIgnoreCase(orderId)){
+				return orderList.get(i);	
+			}	
+		}	
+		return null;
+	}
+	
+	//Get Customer Name by Customer ID
+	public static String getCustomerNameById(String customerId) {
+		for(int i = 0; i < orderList.size(); i++) {
+			if(orderList.get(i).getCustomerId().equalsIgnoreCase(customerId)) {
+				return orderList.get(i).getCustomerName();	
+			}	
+		}	
+		return null;
+	}
+	
+	//Update Burger QTY  
+	public static boolean upadateOrderQty(String orderId, int newQty) {
+		Order order = searchOrder(orderId);
+		if(order != null && order.getOrderStatus() == order.PREPARING) {
+			order.setBurgerQty(newQty);	
+		}	
+		return false;
+	}
+	
+	//Update Order Status  
+	public static boolean upadateOrderStatus(String orderId, int newStatus) {
+		Order order = searchOrder(orderId);
+		if (order != null && order.getOrderStatus() == Order.PREPARING) {
+			order.setBurgerQty(newStatus);
+			return true;	
+		}	
+		return false;
+	}
+	
+	//Customer ID ekakata adala siyaluma Orders labaganeema
+	public static Order[] getOrderByCustomer(String customerId) {
+		int count = 0;
+		for(int i = 0; i < orderList.size(); i++) {
+			if(orderList.get(i).getCustomerId().equalsIgnoreCase(customerId)){
+				count++	
+			}	
+		}	
+		Order[] customerOrders = new Order[count];
+		int index = 0;
+		for(int i = 0; i < orderList.size(); i++) {
+			if(orderList.get(i).getCustomerId().equalsIgnoreCase(customerId)){
+				customerOrders[index++] = orderList.get(i);	
 			}	
 		}
-		return String.format("C%03d", maxId + 1);
-	} 
-}
+		return customerOrders;
+	}
+	
+	//Status eka anuwa Orders Labaganeema
+	public static Order[] getOrderByStatus(int Status) {
+		int count = 0;
+		for (int i=0; i < orderList.size(); i++) {
+			if (orderList.get(i).getOrderStatus() == status) {
+				filtered[index++] = orderList.get(i);	
+			}	
+		}	
+		return filtered;
+	}
