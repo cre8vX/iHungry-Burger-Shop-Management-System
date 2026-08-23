@@ -162,6 +162,7 @@ class OrderController {
 		Order order = searchOrder(orderId);
 		if(order != null && order.getOrderStatus() == order.PREPARING) {
 			order.setBurgerQty(newQty);	
+			return true;
 		}	
 		return false;
 	}
@@ -170,7 +171,7 @@ class OrderController {
 	public static boolean upadateOrderStatus(String orderId, int newStatus) {
 		Order order = searchOrder(orderId);
 		if (order != null && order.getOrderStatus() == Order.PREPARING) {
-			order.setBurgerQty(newStatus);
+			order.setOrderStatus(newStatus);
 			return true;	
 		}	
 		return false;
