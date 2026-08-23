@@ -1,4 +1,4 @@
-class OrderList {
+public class OrderList {
 	private Order[] orderArray;
 	private int size;
 	private int capacity;

@@ -1,4 +1,4 @@
-class OrderController {
+public class OrderController {
 	private static OrderList orderList = new OrderList();
 	
 	public static String generateOrderId() {
