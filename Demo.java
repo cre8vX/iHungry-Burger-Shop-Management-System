@@ -90,6 +90,7 @@ class OrderList {
 		return null;
 	}
 	
+	//size eka private nisa apita ekapara ganna ba, A nisa getter method ekak oana wenawa 
 	public int size() {
 		return size;	
 	}
@@ -137,14 +138,14 @@ class OrderController {
 	}
 	
 	//Search Order by Order ID
-	public static Order searchOrder(String orderId) {
+	public static Order searchOrder(String orderId) { 
 		for (int i=0; i < orderList.size(); i++) {
-			if(orderList.get(i).getOrderId.equalsIgnoreCase(orderId)){
+			if(orderList.get(i).getOrderId().equalsIgnoreCase(orderId)){
 				return orderList.get(i);	
 			}	
 		}	
 		return null;
-	}
+	} 
 	
 	//Get Customer Name by Customer ID
 	public static String getCustomerNameById(String customerId) {
@@ -180,7 +181,7 @@ class OrderController {
 		int count = 0;
 		for(int i = 0; i < orderList.size(); i++) {
 			if(orderList.get(i).getCustomerId().equalsIgnoreCase(customerId)){
-				count++	
+				count++;	
 			}	
 		}	
 		Order[] customerOrders = new Order[count];
@@ -194,12 +195,85 @@ class OrderController {
 	}
 	
 	//Status eka anuwa Orders Labaganeema
-	public static Order[] getOrderByStatus(int Status) {
+	public static Order[] getOrdersByStatus(int status) {
 		int count = 0;
 		for (int i=0; i < orderList.size(); i++) {
 			if (orderList.get(i).getOrderStatus() == status) {
-				filtered[index++] = orderList.get(i);	
+				count++;	
 			}	
 		}	
+		Order[] filtered = new Order[count];
+		int index = 0;
+		for (int i = 0; i < orderList.size(); i++) {
+			if (orderList.get(i).getOrderStatus() == status) {
+				filtered[index++] = orderList.get(i);
+			}
+		}
 		return filtered;
 	}
+	
+	//Best Customers Data(Table ekata 2D String Array ekak vidiyata)
+	public static String[][] getBestCustomerData() {
+		int maxCust = orderList.size();
+		String[] cIds = new String[maxCust];
+		String[] cNames = new String[maxCust];
+		double[] cTotals = new double [maxCust];	
+		int uniqueCount = 0;
+		
+		for(int i = 0; i < orderList.size(); i++) {
+			Order o = orderList.get(i);
+			if(o.getOrderStatus() == Order.CANCELLED) continue;
+			
+			int found = -1;
+			for (int j = 0; j < uniqueCount; j++) {
+				if (cIds[j].equalsIgnoreCase(o.getCustomerId())) {
+					found = j;
+					break;	
+				}	
+			}
+			if (found != -1) {
+				cTotals[found] = cTotals[found] + o.getTotalValue();
+			} else {
+				cIds[uniqueCount] = o.getCustomerId();
+				cNames[uniqueCount] = o.getCustomerName();
+				cTotals[uniqueCount] = o.getTotalValue();
+				uniqueCount++;	
+			}	
+		}
+		
+		//Bubble Sort Descending
+		for (int i = 0; i < uniqueCount - 1; i++) {
+			for(int j = 0; j < uniqueCount - i - 1; j++) {
+				if(cTotals[j] < cTotals[j + 1]) {
+					double tTotal = cTotals[j];
+					cTotals[j] = cTotals[j + 1];
+					cTotals[j + 1] = tTotal;
+
+					String tId = cIds[j];
+					cIds[j] = cIds[j + 1];
+					cIds[j + 1] = tId;
+
+					String tName = cNames[j];
+					cNames[j] = cNames[j + 1];
+					cNames[j + 1] = tName;	
+				}	
+			}	
+		}
+		
+		String[][] tableData = new String[uniqueCount][3];
+		for (int i = 0; i < uniqueCount; i++) {
+			tableData[i][0] = cIds[i];
+			tableData[i][1] = cNames[i];
+			tableData[i][2] = String.format("%.2f", cTotals[i]);	
+		}
+		return tableData;
+	}
+}
+
+public class Demo {
+	public static void main(String[] args) {
+		System.out.println("Next Order ID: " + OrderController.generateOrderId());
+		System.out.println("Next Customer ID: " + OrderController.generateCustomerId());
+	
+	}
+}
