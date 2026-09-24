@@ -32,8 +32,10 @@ public class OrderController {
 	
 	//Search Order by Order ID
 	public static Order searchOrder(String orderId) { 
+		if (orderId == null) return null;
+		String cleanId = orderId.trim();
 		for (int i=0; i < orderList.size(); i++) {
-			if(orderList.get(i).getOrderId().equalsIgnoreCase(orderId)){
+			if (orderList.get(i) != null && orderList.get(i).getOrderId().trim().equalsIgnoreCase(cleanId)) {
 				return orderList.get(i);	
 			}	
 		}	
@@ -51,7 +53,7 @@ public class OrderController {
 	}
 	
 	//Update Burger QTY  
-	public static boolean upadateOrderQty(String orderId, int newQty) {
+	public static boolean updateOrderQty(String orderId, int newQty) {
 		Order order = searchOrder(orderId);
 		if(order != null && order.getOrderStatus() == order.PREPARING) {
 			order.setBurgerQty(newQty);	
@@ -61,7 +63,7 @@ public class OrderController {
 	}
 	
 	//Update Order Status  
-	public static boolean upadateOrderStatus(String orderId, int newStatus) {
+	public static boolean updateOrderStatus(String orderId, int newStatus) {
 		Order order = searchOrder(orderId);
 		if (order != null && order.getOrderStatus() == Order.PREPARING) {
 			order.setOrderStatus(newStatus);
@@ -69,6 +71,8 @@ public class OrderController {
 		}	
 		return false;
 	}
+	
+	//
 	
 	//Customer ID ekakata adala siyaluma Orders labaganeema
 	public static Order[] getOrderByCustomer(String customerId) {

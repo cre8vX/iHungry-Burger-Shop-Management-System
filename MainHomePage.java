@@ -29,9 +29,11 @@ public class MainHomePage extends JFrame {
 		leftPanel.add(lblTitle, BorderLayout.NORTH);
 		
 		//Image ekak add karanna
-		JLabel lblImagePlaceholder = new JLabel("\uD83C\uDF54", SwingConstants.CENTER);
-		lblImagePlaceholder.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 100));
-		leftPanel.add(lblImagePlaceholder, BorderLayout.CENTER);
+		ImageIcon originalIcon = new ImageIcon("imgClipArt.jpg");
+		Image img = originalIcon.getImage().getScaledInstance(270, 340, Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon = new ImageIcon(img);
+		JLabel lblBurgerImage = new JLabel(scaledIcon, SwingConstants.CENTER);
+		leftPanel.add(lblBurgerImage, BorderLayout.CENTER);
 		
 		add(leftPanel);
 		
@@ -74,11 +76,31 @@ public class MainHomePage extends JFrame {
         });
 		
 		// Other Forms link 
+		//PlaceOrderForm eka link kireema
 		btnPlaceOrder.addActionListener(e -> {
             new PlaceOrderForm().setVisible(true);
             this.dispose();
             //JOptionPane.showMessageDialog(this, "Place Order window will open.");
         });
+        
+        //SearchOrderForm eka link kireema
+        btnSearch.addActionListener(e -> {
+			new SearchOptionForm().setVisible(true);
+			this.dispose();
+		});
+		
+		//ViewOrderForm eka link kireem
+		btnViewOrders.addActionListener(e -> {
+			System.out.println("View Orders Clicked!"); 
+			new ViewOrdersMenuForm().setVisible(true);
+			this.dispose();
+		});
+		
+		//UpdateOrderForm eka link kireem
+		btnUpdateOrder.addActionListener(e -> {
+			new UpdateOrderDetailsForm().setVisible(true);
+			this.dispose();
+		});
 	}	
 	
 	private JButton createMenuButton(String text) {

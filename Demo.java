@@ -7,3 +7,9 @@ public class Demo {
 		});
 	}	
 }
+
+//public class Demo{
+//	public static void main(String[] args){
+//		new PlaceOrderForm().setVisible(true);	
+//	}	
+//}

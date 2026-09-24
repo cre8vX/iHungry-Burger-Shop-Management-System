@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class PlaceOrderForm extends JFrame {
+public class PlaceOrderForm extends JFrame { 
 	
 	private JLabel lblOrderIdValue;
 	private JTextField txtCustId;
